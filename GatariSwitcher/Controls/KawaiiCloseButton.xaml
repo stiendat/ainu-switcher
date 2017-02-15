@@ -8,5 +8,25 @@
              d:DesignHeight="300" d:DesignWidth="300">
     <Grid x:Name="layoutGrid" Cursor="Hand">
         <Rectangle x:Name="backgroundRectangle" Fill="Red" />
+        <Rectangle Height="20" Width="3" Fill="White" RenderTransformOrigin="0.5,0.5" >
+            <Rectangle.RenderTransform>
+                <TransformGroup>
+                    <ScaleTransform/>
+                    <SkewTransform/>
+                    <RotateTransform Angle="45"/>
+                    <TranslateTransform/>
+                </TransformGroup>
+            </Rectangle.RenderTransform>
+        </Rectangle>
+        <Rectangle Height="20" Width="3" Fill="White" RenderTransformOrigin="0.5,0.5" >
+            <Rectangle.RenderTransform>
+                <TransformGroup>
+                    <ScaleTransform/>
+                    <SkewTransform/>
+                    <RotateTransform Angle="-45"/>
+                    <TranslateTransform/>
+                </TransformGroup>
+            </Rectangle.RenderTransform>
+        </Rectangle>
     </Grid>
 </UserControl>

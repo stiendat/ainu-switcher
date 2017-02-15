@@ -20,12 +20,7 @@ namespace GatariSwitcher
             certificateButton.Caption = (cert.Status()) ? "Удалить сертификат" : "Установить сертификат";
         }
 
-        private void titleRectangle_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
-        {
-            this.DragMove();
-        }
-
-        private void titleLabel_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        private void title_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
             this.DragMove();
         }

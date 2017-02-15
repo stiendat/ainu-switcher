@@ -16,10 +16,10 @@
                 <RowDefinition Height="11*"/>
             </Grid.RowDefinitions>
             
-            <Rectangle x:Name="titleRectangle" Grid.Row="0" Fill="#1A1A1A" MouseLeftButtonDown="titleRectangle_MouseLeftButtonDown"/>
+            <Rectangle x:Name="titleRectangle" Grid.Row="0" Fill="#1A1A1A" MouseLeftButtonDown="title_MouseLeftButtonDown"/>
             
             <Label x:Name="titleLabel" Grid.Row="0" Content="Вы играете на офе с чертями" FontFamily="/GatariSwitcher;component/Fonts/#Exo 2" Foreground="White"
-                TextOptions.TextFormattingMode="Display" VerticalContentAlignment="Center" MouseLeftButtonDown="titleLabel_MouseLeftButtonDown" />
+                TextOptions.TextFormattingMode="Display" VerticalContentAlignment="Center" MouseLeftButtonDown="title_MouseLeftButtonDown" />
 
             <local:KawaiiCloseButton x:Name="closeButton" Grid.Row="0" HorizontalAlignment="Right" Width="30" MouseLeftButtonDown="closeButton_MouseLeftButtonDown" />
 
