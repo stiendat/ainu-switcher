@@ -7,8 +7,14 @@
              xmlns:local="clr-namespace:GatariSwitcher"
              d:DesignHeight="100" d:DesignWidth="300">
     <Grid x:Name="layoutGrid" MouseEnter="layoutGrid_MouseEnter" MouseLeave="layoutGrid_MouseLeave" Cursor="Hand">
-        <Rectangle x:Name="backgroundRectangle" Fill="White" />
-        <Label x:Name="textLabel" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" FontSize="20" FontFamily="/GatariSwitcher;component/Fonts/#Exo 2"
-               Foreground="#1A1A1A" Content="{Binding Caption, ElementName=userControl, Mode=TwoWay}"/>
+        <Rectangle x:Name="backgroundRectangle"
+                   Fill="White" />
+        <Label x:Name="textLabel"
+               HorizontalContentAlignment="Center"
+               VerticalContentAlignment="Center"
+               FontSize="20"
+               FontFamily="/GatariSwitcher;component/Fonts/#Exo 2"
+               Foreground="#1A1A1A"
+               Content="{Binding Caption, ElementName=userControl, Mode=TwoWay}"/>
     </Grid>
 </UserControl>

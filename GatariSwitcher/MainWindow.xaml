@@ -6,9 +6,15 @@
         WindowStartupLocation="CenterScreen">
     <Grid x:Name="mainGrid">
         <Grid.Effect>
-            <DropShadowEffect BlurRadius="10" Opacity=".5" RenderingBias="Performance" ShadowDepth="2"/>
+            <DropShadowEffect BlurRadius="10"
+                              Opacity=".5"
+                              RenderingBias="Performance" 
+                              ShadowDepth="2"/>
         </Grid.Effect>
-        <Grid x:Name="layoutGrid" Background="White" Margin="10">
+        <Grid x:Name="layoutGrid"
+              Background="White"
+        	  Margin="10">
+
             <Grid.RowDefinitions>
                 <RowDefinition Height="30"/>
                 <RowDefinition Height="50"/>
@@ -16,21 +22,46 @@
                 <RowDefinition Height="11*"/>
             </Grid.RowDefinitions>
             
-            <Rectangle x:Name="titleRectangle" Grid.Row="0" Fill="#1A1A1A" MouseLeftButtonDown="title_MouseLeftButtonDown"/>
+            <Rectangle x:Name="titleRectangle"
+                       Grid.Row="0"
+                       Fill="#1A1A1A"
+                       MouseLeftButtonDown="title_MouseLeftButtonDown" />
             
-            <Label x:Name="titleLabel" Grid.Row="0" Content="Вы играете на офе с чертями" FontFamily="/GatariSwitcher;component/Fonts/#Exo 2" Foreground="White"
-                TextOptions.TextFormattingMode="Display" VerticalContentAlignment="Center" MouseLeftButtonDown="title_MouseLeftButtonDown" />
+            <Label x:Name="titleLabel"
+                   Grid.Row="0"
+                   Content="Вы играете на офе с чертями"
+                   FontFamily="/GatariSwitcher;component/Fonts/#Exo 2"
+                   TextOptions.TextFormattingMode="Display"
+                   VerticalContentAlignment="Center"
+                   MouseLeftButtonDown="title_MouseLeftButtonDown" />
 
-            <local:KawaiiCloseButton x:Name="closeButton" Grid.Row="0" HorizontalAlignment="Right" Width="30" MouseLeftButtonDown="closeButton_MouseLeftButtonDown" />
+            <local:KawaiiCloseButton x:Name="closeButton"
+                                     Grid.Row="0"
+                                     HorizontalAlignment="Right"
+                                     Width="30"
+                                     MouseLeftButtonDown="closeButton_MouseLeftButtonDown" />
 
-            <local:KawaiiButton x:Name="modeButton" Grid.Row="1" Caption="Перейти на гатари с кентами" MouseLeftButtonDown="modeButton_MouseLeftButtonDown" />
+            <local:KawaiiButton x:Name="modeButton"
+                                Grid.Row="1"
+                                Caption="Перейти на гатари с кентами"
+                                MouseLeftButtonDown="modeButton_MouseLeftButtonDown" />
 
-            <local:KawaiiButton x:Name="certificateButton" Grid.Row="2" Caption="Установить сертификат" MouseLeftButtonDown="certificateButton_MouseLeftButtonDown"
-                ToolTip="Без этой полезной штуковины вы не сможете подключиться на последних версиях игры" />
+            <local:KawaiiButton x:Name="certificateButton"
+                                Grid.Row="2"
+                                Caption="Установить сертификат"
+                                MouseLeftButtonDown="certificateButton_MouseLeftButtonDown"
+                                ToolTip="Без этой полезной штуковины вы не сможете подключиться на последних версиях игры" />
 
-            <TextBlock x:Name="urlBlock" Grid.Row="3" Text="http://osu.gatari.pw" HorizontalAlignment="Right" TextDecorations="Underline"
-                FontFamily="/GatariSwitcher;component/Fonts/#Exo 2" Margin="0,0,10,0" Cursor="Hand" TextOptions.TextFormattingMode="Display"
-                MouseLeftButtonDown="urlBlock_MouseLeftButtonDown"/>            
+            <TextBlock x:Name="urlBlock"
+                       Grid.Row="3"
+                       Text="http://osu.gatari.pw"
+                       HorizontalAlignment="Right"
+                       TextDecorations="Underline"
+                       FontFamily="/GatariSwitcher;component/Fonts/#Exo 2"
+                       Margin="0,0,10,0"
+                       Cursor="Hand"
+                       TextOptions.TextFormattingMode="Display"
+                       MouseLeftButtonDown="urlBlock_MouseLeftButtonDown"/>            
         </Grid>
     </Grid>
 </Window>

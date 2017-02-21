@@ -10,7 +10,7 @@ namespace GatariSwitcher
 
         public void SwitchToGatari()
         {
-            string hostsPath = getHostsPath();
+            string hostsPath = GetHostsPath();
 
             string[] lines = File.ReadAllLines(hostsPath);
             List<string> result = new List<string>();
@@ -34,7 +34,7 @@ namespace GatariSwitcher
 
         public void SwitchToOfficial()
         {
-            string hostsPath = getHostsPath();
+            string hostsPath = GetHostsPath();
 
             string[] lines = File.ReadAllLines(hostsPath);
             List<string> result = new List<string>();
@@ -56,7 +56,7 @@ namespace GatariSwitcher
         /// <returns>true - gatari, false - official</returns>
         public bool GetCurrentServer()
         {
-            string[] lines = File.ReadAllLines(getHostsPath());
+            string[] lines = File.ReadAllLines(GetHostsPath());
             foreach (var i in lines)
             {
                 if (i.Contains("osu.ppy.sh") && !i.Contains("#"))
@@ -67,7 +67,7 @@ namespace GatariSwitcher
             return false;
         }
 
-        private string getHostsPath()
+        private string GetHostsPath()
         {
             string windir = Environment.GetFolderPath(Environment.SpecialFolder.Windows);
             string result = Path.Combine(windir, "System32", "drivers", "etc", "hosts");
