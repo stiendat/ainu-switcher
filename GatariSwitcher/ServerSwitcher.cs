@@ -6,7 +6,7 @@ namespace GatariSwitcher
 {
     class ServerSwitcher
     {
-        const string GATARI_ADDRESS = "185.188.182.238";
+        const string GATARI_ADDRESS = "93.170.76.141";
 
         public void SwitchToGatari()
         {
