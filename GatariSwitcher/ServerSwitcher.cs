@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Collections.Generic;
 using System.IO;
 
@@ -13,15 +14,8 @@ namespace GatariSwitcher
             string hostsPath = GetHostsPath();
 
             string[] lines = File.ReadAllLines(hostsPath);
-            List<string> result = new List<string>();
 
-            foreach (var i in lines)
-            {
-                if (!i.Contains("ppy.sh"))
-                {
-                    result.Add(i);
-                }
-            }
+            var result = lines.Where(x => !x.Contains("ppy.sh")).ToList();
 
             result.Add(GATARI_ADDRESS + "   osu.ppy.sh");
             result.Add(GATARI_ADDRESS + "   c.ppy.sh");
@@ -37,15 +31,8 @@ namespace GatariSwitcher
             string hostsPath = GetHostsPath();
 
             string[] lines = File.ReadAllLines(hostsPath);
-            List<string> result = new List<string>();
 
-            foreach (var i in lines)
-            {
-                if (!i.Contains("ppy.sh"))
-                {
-                    result.Add(i);
-                }
-            }
+            var result = lines.Where(x => !x.Contains("ppy.sh"));
 
             File.WriteAllLines(hostsPath, result); 
         }
@@ -57,14 +44,8 @@ namespace GatariSwitcher
         public bool GetCurrentServer()
         {
             string[] lines = File.ReadAllLines(GetHostsPath());
-            foreach (var i in lines)
-            {
-                if (i.Contains("osu.ppy.sh") && !i.Contains("#"))
-                {
-                    return true;
-                }
-            }
-            return false;
+
+            return lines.Any(x => x.Contains("osu.ppy.sh") && x.Contains("#"));
         }
 
         private string GetHostsPath()
