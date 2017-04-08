@@ -1,44 +1,49 @@
 ﻿using System;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
 
 namespace GatariSwitcher
 {
-    /// <summary>
-    /// Логика взаимодействия для MainWindow.xaml
-    /// </summary>
     public partial class MainWindow : Window
     {
+        bool certStatus = false;
+        bool servStatus = false;
+
         public MainWindow()
         {
             InitializeComponent();
-            ServerSwitcher switcher = new ServerSwitcher();
-            modeButton.Caption = (switcher.GetCurrentServer()) ? "Перейти на оф с чертями" : "Перейти на гатари с кентами";
-            titleLabel.Content = (switcher.GetCurrentServer()) ? "Вы играете на гатари с кентами" : "Вы играете на офе с чертями";
-
-            CertificateManager cert = new CertificateManager();
-            certificateButton.Caption = (cert.Status()) ? "Удалить сертификат" : "Установить сертификат";
+            CheckStatus();
         }
 
-        private void title_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        private async void CheckStatus()
         {
+            var manager = new CertificateManager();
+            certStatus = await manager.GetStatus();
+            var switcher = new ServerSwitcher();
+            servStatus = switcher.GetCurrentServer();
+
+            statusLabel.Content = servStatus ? "Вы играете на гатарях с кентами!" : "Вы играете на офе с чертями!";
+            switchButton.Content = servStatus ? "Перейти на официальный сервер" : "Перейти на гатари";
+            certButton.Content = certStatus ? "Удалить сертификат" : "Установить сертификат";
+        }
+
+        private void titleBar_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            base.OnMouseLeftButtonDown(e);
+
             this.DragMove();
         }
 
-        private void closeButton_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        private void closeButton_Click(object sender, RoutedEventArgs e)
         {
             Application.Current.Shutdown();
         }
 
-        private void urlBlock_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        private void switchButton_Click(object sender, RoutedEventArgs e)
         {
-            System.Diagnostics.Process.Start(@"https://osu.gatari.pw");
-        }
-
-        private void modeButton_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
-        {
-            ServerSwitcher switcher = new ServerSwitcher();
-            if (switcher.GetCurrentServer())
+            var switcher = new ServerSwitcher();
+            if (servStatus)
             {
                 try
                 {
@@ -46,7 +51,7 @@ namespace GatariSwitcher
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show("Произошла ошибка!\n" + ex.Message);
+                    MessageBox.Show(ex.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
                 }
             }
             else
@@ -57,41 +62,43 @@ namespace GatariSwitcher
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show("Произошла ошибка!\n" + ex.Message);
+                    MessageBox.Show(ex.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
                 }
             }
-
-            bool status = switcher.GetCurrentServer();
-            modeButton.Caption = (status) ? "Перейти на оф с чертями" : "Перейти на гатари с кентами";
-            titleLabel.Content = (status) ? "Вы играете на гатари с кентами" : "Вы играете на офе с чертями";
+            CheckStatus();
         }
 
-        private void certificateButton_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        private void sertButton_Click(object sender, RoutedEventArgs e)
         {
-            CertificateManager cert = new CertificateManager();
-            if (cert.Status())
+            var manager = new CertificateManager();
+            if (certStatus)
             {
                 try
                 {
-                    cert.Uninstall();
+                    manager.Uninstall();
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show("Ошибка!\n" + ex.Message);
+                    MessageBox.Show(ex.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
                 }
             }
             else
             {
                 try
                 {
-                    cert.Install();
+                    manager.Install();
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show("Ошибка!\n" + ex.Message);
+                    MessageBox.Show(ex.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
                 }
             }
-            certificateButton.Caption = (cert.Status()) ? "Удалить сертификат" : "Установить сертификат";
+            CheckStatus();
+        }
+
+        private void websiteText_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            System.Diagnostics.Process.Start("http://osu.gatari.pw");
         }
     }
 }
