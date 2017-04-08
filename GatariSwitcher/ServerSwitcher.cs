@@ -45,7 +45,7 @@ namespace GatariSwitcher
         {
             string[] lines = File.ReadAllLines(GetHostsPath());
 
-            return lines.Any(x => x.Contains("osu.ppy.sh") && x.Contains("#"));
+            return lines.Any(x => x.Contains("osu.ppy.sh") && !x.Contains("#"));
         }
 
         private string GetHostsPath()

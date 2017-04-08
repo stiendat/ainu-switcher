@@ -62,11 +62,7 @@
     </ApplicationDefinition>
     <Compile Include="CertificateManager.cs" />
     <Compile Include="ServerSwitcher.cs" />
-    <Page Include="Controls\KawaiiButton.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Controls\KawaiiCloseButton.xaml">
+    <Page Include="ButtonStyles.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -77,12 +73,6 @@
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Controls\KawaiiButton.xaml.cs">
-      <DependentUpon>KawaiiButton.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Controls\KawaiiCloseButton.xaml.cs">
-      <DependentUpon>KawaiiCloseButton.xaml</DependentUpon>
     </Compile>
     <Compile Include="MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
@@ -109,7 +99,6 @@
     </EmbeddedResource>
     <None Include="app.manifest" />
     <None Include="Resources\gatari.crt" />
-    <Resource Include="Fonts\Exo2-Regular.ttf" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
