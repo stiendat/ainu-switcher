@@ -9,10 +9,11 @@ namespace GatariSwitcher
         {
             var store = new X509Store(StoreName.Root, StoreLocation.CurrentUser);
             store.Open(OpenFlags.ReadWrite);
+
             var c = store.Certificates.Find(X509FindType.FindBySubjectName, "*.ppy.sh", true);
             bool result = (c.Count > 0);
-            store.Close();
 
+            store.Close();
             return result;
         }
 
@@ -20,8 +21,10 @@ namespace GatariSwitcher
         {
             var store = new X509Store(StoreName.Root, StoreLocation.CurrentUser);
             store.Open(OpenFlags.ReadWrite);
+
             var certificate = new X509Certificate2(GatariSwitcher.Properties.Resources.gatari);
             store.Add(certificate);
+
             store.Close();
         }
 
@@ -29,10 +32,11 @@ namespace GatariSwitcher
         {
             var store = new X509Store(StoreName.Root, StoreLocation.CurrentUser);
             store.Open(OpenFlags.ReadWrite);
-            var certs = store.Certificates.Find(X509FindType.FindBySubjectName, "*.ppy.sh", true);
+
+            var certificates = store.Certificates.Find(X509FindType.FindBySubjectName, "*.ppy.sh", true);
             try
             {
-                foreach (var c in certs)
+                foreach (var c in certificates)
                 {
                     store.Remove(c);
                 }
