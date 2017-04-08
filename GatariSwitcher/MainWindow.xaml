@@ -33,7 +33,7 @@
                    FontFamily="/GatariSwitcher;component/Fonts/#Exo 2"
                    TextOptions.TextFormattingMode="Display"
                    VerticalContentAlignment="Center"
-                   MouseLeftButtonDown="title_MouseLeftButtonDown" />
+                   MouseLeftButtonDown="title_MouseLeftButtonDown" Foreground="White" />
 
             <local:KawaiiCloseButton x:Name="closeButton"
                                      Grid.Row="0"
