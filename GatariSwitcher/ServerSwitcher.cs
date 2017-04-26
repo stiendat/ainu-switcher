@@ -13,6 +13,12 @@ namespace GatariSwitcher
         {
             string hostsPath = GetHostsPath();
 
+            bool roStatus = GetReadOnlyFlagStatus(hostsPath);
+            if (roStatus)
+            {
+                DisableReadOnlyFlag(hostsPath);
+            }
+
             string[] lines = File.ReadAllLines(hostsPath);
 
             var result = lines.Where(x => !x.Contains("ppy.sh")).ToList();
@@ -24,17 +30,32 @@ namespace GatariSwitcher
             result.Add(GATARI_ADDRESS + "   i.ppy.sh");
 
             File.WriteAllLines(hostsPath, result);
+
+            if (roStatus)
+            {
+                EnableReadOnlyFlag(hostsPath);
+            }
         }
 
         public void SwitchToOfficial()
         {
             string hostsPath = GetHostsPath();
 
+            bool roStatus = GetReadOnlyFlagStatus(hostsPath);
+            if (roStatus)
+            {
+                DisableReadOnlyFlag(hostsPath);
+            }
+
             string[] lines = File.ReadAllLines(hostsPath);
 
             var result = lines.Where(x => !x.Contains("ppy.sh"));
 
-            File.WriteAllLines(hostsPath, result); 
+            File.WriteAllLines(hostsPath, result);
+            if (roStatus)
+            {
+                EnableReadOnlyFlag(hostsPath);
+            }
         }
 
         /// <summary>
@@ -54,6 +75,26 @@ namespace GatariSwitcher
             string result = Path.Combine(windir, "System32", "drivers", "etc", "hosts");
 
             return result;
+        }
+		
+		private bool GetReadOnlyFlagStatus(string filepath)
+        {
+            var attr = File.GetAttributes(filepath);
+            return attr.HasFlag(FileAttributes.ReadOnly);
+        }
+
+        private void DisableReadOnlyFlag(string filepath)
+        {
+            var attr = File.GetAttributes(filepath);
+            var a = attr ^ FileAttributes.ReadOnly;
+            File.SetAttributes(filepath, a);
+        }
+
+        private void EnableReadOnlyFlag(string filepath)
+        {
+            var attr = File.GetAttributes(filepath);
+            var a = attr | FileAttributes.ReadOnly;
+            File.SetAttributes(filepath, a);
         }
     }
 }
