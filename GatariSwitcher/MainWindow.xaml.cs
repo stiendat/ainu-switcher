@@ -18,9 +18,10 @@ namespace GatariSwitcher
 
         private async void CheckStatus()
         {
+            string servAddr = await GeneralHelper.GetActualGatariAddress();
             var manager = new CertificateManager();
             certStatus = await manager.GetStatus();
-            var switcher = new ServerSwitcher("93.170.76.141");
+            var switcher = new ServerSwitcher(servAddr);
             servStatus = switcher.GetCurrentServer();
 
             statusLabel.Content = servStatus ? "Вы играете на гатарях с кентами!" : "Вы играете на офе с чертями!";
@@ -39,9 +40,11 @@ namespace GatariSwitcher
             Application.Current.Shutdown();
         }
 
-        private void switchButton_Click(object sender, RoutedEventArgs e)
+        private async void switchButton_Click(object sender, RoutedEventArgs e)
         {
-            var switcher = new ServerSwitcher("93.170.76.141");
+            switchButton.IsEnabled = false;
+            string servAddr = await GeneralHelper.GetActualGatariAddress();
+            var switcher = new ServerSwitcher(servAddr);
             try
             {
                 if (servStatus)
@@ -58,6 +61,7 @@ namespace GatariSwitcher
                 MessageBox.Show(ex.Message, "Ошибка!", MessageBoxButton.OK, MessageBoxImage.Error);
             }
             CheckStatus();
+            switchButton.IsEnabled = true;
         }
 
         private void sertButton_Click(object sender, RoutedEventArgs e)
