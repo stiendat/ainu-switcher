@@ -20,7 +20,7 @@ namespace GatariSwitcher
         {
             var manager = new CertificateManager();
             certStatus = await manager.GetStatus();
-            var switcher = new ServerSwitcher();
+            var switcher = new ServerSwitcher("93.170.76.141");
             servStatus = switcher.GetCurrentServer();
 
             statusLabel.Content = servStatus ? "Вы играете на гатарях с кентами!" : "Вы играете на офе с чертями!";
@@ -31,7 +31,6 @@ namespace GatariSwitcher
         private void titleBar_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
             base.OnMouseLeftButtonDown(e);
-
             this.DragMove();
         }
 
@@ -42,28 +41,21 @@ namespace GatariSwitcher
 
         private void switchButton_Click(object sender, RoutedEventArgs e)
         {
-            var switcher = new ServerSwitcher();
-            if (servStatus)
+            var switcher = new ServerSwitcher("93.170.76.141");
+            try
             {
-                try
+                if (servStatus)
                 {
                     switcher.SwitchToOfficial();
                 }
-                catch (Exception ex)
-                {
-                    MessageBox.Show(ex.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-                }
-            }
-            else
-            {
-                try
+                else
                 {
                     switcher.SwitchToGatari();
                 }
-                catch (Exception ex)
-                {
-                    MessageBox.Show(ex.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, "Ошибка!", MessageBoxButton.OK, MessageBoxImage.Error);
             }
             CheckStatus();
         }
@@ -71,27 +63,20 @@ namespace GatariSwitcher
         private void sertButton_Click(object sender, RoutedEventArgs e)
         {
             var manager = new CertificateManager();
-            if (certStatus)
+            try
             {
-                try
+                if (certStatus)
                 {
                     manager.Uninstall();
                 }
-                catch (Exception ex)
-                {
-                    MessageBox.Show(ex.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-                }
-            }
-            else
-            {
-                try
+                else
                 {
                     manager.Install();
                 }
-                catch (Exception ex)
-                {
-                    MessageBox.Show(ex.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
             }
             CheckStatus();
         }

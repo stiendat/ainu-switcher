@@ -5,7 +5,7 @@
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{9E52F4E6-CBDE-439C-9534-AC06E69748A2}</ProjectGuid>
-    <OutputType>WinExe</OutputType>
+    <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>GatariSwitcher</RootNamespace>
     <AssemblyName>GatariSwitcher</AssemblyName>
@@ -40,6 +40,9 @@
   <PropertyGroup>
     <ApplicationIcon>icon.ico</ApplicationIcon>
   </PropertyGroup>
+  <PropertyGroup>
+    <StartupObject />
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Data" />
@@ -61,6 +64,9 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="CertificateManager.cs" />
+    <Compile Include="Extensions\EnumerableExtensions.cs" />
+    <Compile Include="Hosts\HostsEntry.cs" />
+    <Compile Include="Hosts\HostsFile.cs" />
     <Compile Include="ServerSwitcher.cs" />
     <Page Include="ButtonStyles.xaml">
       <SubType>Designer</SubType>

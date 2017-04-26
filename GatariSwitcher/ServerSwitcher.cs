@@ -2,60 +2,45 @@
 using System.Linq;
 using System.Collections.Generic;
 using System.IO;
+using GatariSwitcher.Hosts;
+using GatariSwitcher.Extensions;
 
 namespace GatariSwitcher
 {
     class ServerSwitcher
     {
-        const string GATARI_ADDRESS = "93.170.76.141";
+        private readonly string gatariAddress;
+
+        public ServerSwitcher(string gatariAddress)
+        {
+            this.gatariAddress = gatariAddress;
+        }
 
         public void SwitchToGatari()
         {
-            string hostsPath = GetHostsPath();
-
-            bool roStatus = GetReadOnlyFlagStatus(hostsPath);
-            if (roStatus)
-            {
-                DisableReadOnlyFlag(hostsPath);
-            }
-
-            string[] lines = File.ReadAllLines(hostsPath);
-
-            var result = lines.Where(x => !x.Contains("ppy.sh")).ToList();
-
-            result.Add(GATARI_ADDRESS + "   osu.ppy.sh");
-            result.Add(GATARI_ADDRESS + "   c.ppy.sh");
-            result.Add(GATARI_ADDRESS + "   c1.ppy.sh");
-            result.Add(GATARI_ADDRESS + "   a.ppy.sh");
-            result.Add(GATARI_ADDRESS + "   i.ppy.sh");
-
-            File.WriteAllLines(hostsPath, result);
-
-            if (roStatus)
-            {
-                EnableReadOnlyFlag(hostsPath);
-            }
+            var hosts = HostsFile.Open(GetHostsPath());
+            //remove old items
+            hosts.Items
+                .Where(x => x.Host != null && x.Host.Contains("ppy.sh"))
+                .ToList()
+                .ForEach(x => hosts.Items.Remove(x));
+            // add new items
+            hosts.Items.Add(new HostsEntry(gatariAddress, "osu.ppy.sh", null));
+            hosts.Items.Add(new HostsEntry(gatariAddress, "c.ppy.sh", null));
+            hosts.Items.Add(new HostsEntry(gatariAddress, "c1.ppy.sh", null));
+            hosts.Items.Add(new HostsEntry(gatariAddress, "a.ppy.sh", null));
+            hosts.Items.Add(new HostsEntry(gatariAddress, "i.ppy.sh", null));
+            hosts.Write();
         }
 
         public void SwitchToOfficial()
         {
-            string hostsPath = GetHostsPath();
-
-            bool roStatus = GetReadOnlyFlagStatus(hostsPath);
-            if (roStatus)
-            {
-                DisableReadOnlyFlag(hostsPath);
-            }
-
-            string[] lines = File.ReadAllLines(hostsPath);
-
-            var result = lines.Where(x => !x.Contains("ppy.sh"));
-
-            File.WriteAllLines(hostsPath, result);
-            if (roStatus)
-            {
-                EnableReadOnlyFlag(hostsPath);
-            }
+            var hosts = HostsFile.Open(GetHostsPath());
+            hosts.Items
+                .Where(x => x.Host != null && x.Host.Contains("ppy.sh"))
+                .ToList()
+                .ForEach(x => hosts.Items.Remove(x));
+            hosts.Write();
         }
 
         /// <summary>
@@ -64,9 +49,8 @@ namespace GatariSwitcher
         /// <returns>true - gatari, false - official</returns>
         public bool GetCurrentServer()
         {
-            string[] lines = File.ReadAllLines(GetHostsPath());
-
-            return lines.Any(x => x.Contains("osu.ppy.sh") && !x.Contains("#"));
+            var hosts = HostsFile.Open(GetHostsPath());
+            return hosts.Items.Any(x => x.Host != null && x.Host.Contains("ppy.sh"));
         }
 
         private string GetHostsPath()
@@ -75,26 +59,6 @@ namespace GatariSwitcher
             string result = Path.Combine(windir, "System32", "drivers", "etc", "hosts");
 
             return result;
-        }
-		
-		private bool GetReadOnlyFlagStatus(string filepath)
-        {
-            var attr = File.GetAttributes(filepath);
-            return attr.HasFlag(FileAttributes.ReadOnly);
-        }
-
-        private void DisableReadOnlyFlag(string filepath)
-        {
-            var attr = File.GetAttributes(filepath);
-            var a = attr ^ FileAttributes.ReadOnly;
-            File.SetAttributes(filepath, a);
-        }
-
-        private void EnableReadOnlyFlag(string filepath)
-        {
-            var attr = File.GetAttributes(filepath);
-            var a = attr | FileAttributes.ReadOnly;
-            File.SetAttributes(filepath, a);
         }
     }
 }
