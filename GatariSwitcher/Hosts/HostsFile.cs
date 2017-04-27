@@ -32,19 +32,19 @@ namespace GatariSwitcher.Hosts
                 }
                 else if (line.Contains(' '))
                 {
-                    string[] split = line.Split(new[] { ' ' }, 2, StringSplitOptions.RemoveEmptyEntries);
-                    string address = split[0];
+                    string[] split = line.Split(new[] { ' ' }, 2);
+                    string address = split[0].Trim();
                     string host = null;
                     string comment = null;
                     if (split[1].Contains(' '))
                     {
-                        string[] spl = split[1].Split(new[] { ' ' }, 2, StringSplitOptions.RemoveEmptyEntries);
-                        host = spl[0];
-                        comment = spl[1];
+                        string[] spl = split[1].Split(new[] { ' ' }, 2);
+                        host = spl[0].Trim();
+                        comment = spl[1].Trim();
                     }
                     else
                     {
-                        host = split[1];
+                        host = split[1].Trim();
                     }
                     result.Items.Add(new HostsEntry(address, host, comment));
                 }
