@@ -2,45 +2,51 @@
 using System.Linq;
 using System.Collections.Generic;
 using System.IO;
-using GatariSwitcher.Hosts;
 using GatariSwitcher.Extensions;
 
 namespace GatariSwitcher
 {
     class ServerSwitcher
     {
-        private readonly string gatariAddress;
+        private readonly string serverAddress;
 
-        public ServerSwitcher(string gatariAddress)
+        public ServerSwitcher(string servAddress)
         {
-            this.gatariAddress = gatariAddress;
+            this.serverAddress = servAddress;
         }
 
         public void SwitchToGatari()
         {
-            var hosts = HostsFile.Open(GetHostsPath());
-            //remove old items
-            hosts.Items
-                .Where(x => x.Host != null && x.Host.Contains("ppy.sh"))
-                .ToList()
-                .ForEach(x => hosts.Items.Remove(x));
-            // add new items
-            hosts.Items.Add(new HostsEntry(gatariAddress, "osu.ppy.sh", null));
-            hosts.Items.Add(new HostsEntry(gatariAddress, "c.ppy.sh", null));
-            hosts.Items.Add(new HostsEntry(gatariAddress, "c1.ppy.sh", null));
-            hosts.Items.Add(new HostsEntry(gatariAddress, "a.ppy.sh", null));
-            hosts.Items.Add(new HostsEntry(gatariAddress, "i.ppy.sh", null));
-            hosts.Write();
+            string hostsPath = GetHostsPath();
+
+            string[] lines = File.ReadAllLines(hostsPath);
+
+            var result = lines.Where(x => !x.Contains("ppy.sh")).ToList();
+
+            result.Add(serverAddress + "   osu.ppy.sh");
+            result.Add(serverAddress + "   c.ppy.sh");
+            result.Add(serverAddress + "   c1.ppy.sh");
+            result.Add(serverAddress + "   a.ppy.sh");
+            result.Add(serverAddress + "   i.ppy.sh");
+
+            bool ro = GetReadOnlyFlagStatus(hostsPath);
+            if (ro) DisableReadOnlyFlag(hostsPath);
+            File.WriteAllLines(hostsPath, result);
+            if (ro) EnableReadOnlyFlag(hostsPath);
         }
 
         public void SwitchToOfficial()
         {
-            var hosts = HostsFile.Open(GetHostsPath());
-            hosts.Items
-                .Where(x => x.Host != null && x.Host.Contains("ppy.sh"))
-                .ToList()
-                .ForEach(x => hosts.Items.Remove(x));
-            hosts.Write();
+            string hostsPath = GetHostsPath();
+
+            string[] lines = File.ReadAllLines(hostsPath);
+
+            var result = lines.Where(x => !x.Contains("ppy.sh"));
+
+            bool ro = GetReadOnlyFlagStatus(hostsPath);
+            if (ro) DisableReadOnlyFlag(hostsPath);
+            File.WriteAllLines(hostsPath, result);
+            if (ro) EnableReadOnlyFlag(hostsPath);
         }
 
         /// <summary>
@@ -49,8 +55,9 @@ namespace GatariSwitcher
         /// <returns>true - gatari, false - official</returns>
         public bool GetCurrentServer()
         {
-            var hosts = HostsFile.Open(GetHostsPath());
-            return hosts.Items.Any(x => x.Host != null && x.Host.Contains("ppy.sh"));
+            string[] lines = File.ReadAllLines(GetHostsPath());
+
+            return lines.Any(x => x.Contains("osu.ppy.sh") && !x.Contains("#"));
         }
 
         private string GetHostsPath()
@@ -59,6 +66,26 @@ namespace GatariSwitcher
             string result = Path.Combine(windir, "System32", "drivers", "etc", "hosts");
 
             return result;
+        }
+
+        private bool GetReadOnlyFlagStatus(string filepath)
+        {
+            var attr = File.GetAttributes(filepath);
+            return attr.HasFlag(FileAttributes.ReadOnly);
+        }
+
+        private void DisableReadOnlyFlag(string filepath)
+        {
+            var attr = File.GetAttributes(filepath);
+            var a = attr ^ FileAttributes.ReadOnly;
+            File.SetAttributes(filepath, a);
+        }
+
+        private void EnableReadOnlyFlag(string filepath)
+        {
+            var attr = File.GetAttributes(filepath);
+            var a = attr | FileAttributes.ReadOnly;
+            File.SetAttributes(filepath, a);
         }
     }
 }

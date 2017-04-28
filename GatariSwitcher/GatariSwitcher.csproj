@@ -66,8 +66,6 @@
     <Compile Include="CertificateManager.cs" />
     <Compile Include="Extensions\EnumerableExtensions.cs" />
     <Compile Include="GeneralHelper.cs" />
-    <Compile Include="Hosts\HostsEntry.cs" />
-    <Compile Include="Hosts\HostsFile.cs" />
     <Compile Include="ServerSwitcher.cs" />
     <Page Include="ButtonStyles.xaml">
       <SubType>Designer</SubType>
