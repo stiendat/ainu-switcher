@@ -1,8 +1,6 @@
-﻿using System;
-using System.Linq;
-using System.Collections.Generic;
-using System.IO;
+﻿using System.Linq;
 using GatariSwitcher.Extensions;
+using GatariSwitcher.Helpers;
 
 namespace GatariSwitcher
 {
@@ -17,36 +15,22 @@ namespace GatariSwitcher
 
         public void SwitchToGatari()
         {
-            string hostsPath = GetHostsPath();
-
-            string[] lines = File.ReadAllLines(hostsPath);
-
+            var lines = HostsFile.ReadAllLines();
             var result = lines.Where(x => !x.Contains("ppy.sh")).ToList();
-
-            result.Add(serverAddress + "   osu.ppy.sh");
-            result.Add(serverAddress + "   c.ppy.sh");
-            result.Add(serverAddress + "   c1.ppy.sh");
-            result.Add(serverAddress + "   a.ppy.sh");
-            result.Add(serverAddress + "   i.ppy.sh");
-
-            bool ro = GetReadOnlyFlagStatus(hostsPath);
-            if (ro) DisableReadOnlyFlag(hostsPath);
-            File.WriteAllLines(hostsPath, result);
-            if (ro) EnableReadOnlyFlag(hostsPath);
+            result.AddRange
+            (
+                serverAddress + " osu.ppy.sh",
+                serverAddress + " c.ppy.sh",
+                serverAddress + " c1.ppy.sh",
+                serverAddress + " a.ppy.sh",
+                serverAddress + " i.ppy.sh"
+            );
+            HostsFile.WriteAllLines(result);
         }
 
         public void SwitchToOfficial()
         {
-            string hostsPath = GetHostsPath();
-
-            string[] lines = File.ReadAllLines(hostsPath);
-
-            var result = lines.Where(x => !x.Contains("ppy.sh"));
-
-            bool ro = GetReadOnlyFlagStatus(hostsPath);
-            if (ro) DisableReadOnlyFlag(hostsPath);
-            File.WriteAllLines(hostsPath, result);
-            if (ro) EnableReadOnlyFlag(hostsPath);
+            HostsFile.WriteAllLines(HostsFile.ReadAllLines().Where(x => !x.Contains("ppy.sh")));
         }
 
         /// <summary>
@@ -55,37 +39,7 @@ namespace GatariSwitcher
         /// <returns>true - gatari, false - official</returns>
         public bool GetCurrentServer()
         {
-            string[] lines = File.ReadAllLines(GetHostsPath());
-
-            return lines.Any(x => x.Contains("osu.ppy.sh") && !x.Contains("#"));
-        }
-
-        private string GetHostsPath()
-        {
-            string windir = Environment.GetFolderPath(Environment.SpecialFolder.Windows);
-            string result = Path.Combine(windir, "System32", "drivers", "etc", "hosts");
-
-            return result;
-        }
-
-        private bool GetReadOnlyFlagStatus(string filepath)
-        {
-            var attr = File.GetAttributes(filepath);
-            return attr.HasFlag(FileAttributes.ReadOnly);
-        }
-
-        private void DisableReadOnlyFlag(string filepath)
-        {
-            var attr = File.GetAttributes(filepath);
-            var a = attr ^ FileAttributes.ReadOnly;
-            File.SetAttributes(filepath, a);
-        }
-
-        private void EnableReadOnlyFlag(string filepath)
-        {
-            var attr = File.GetAttributes(filepath);
-            var a = attr | FileAttributes.ReadOnly;
-            File.SetAttributes(filepath, a);
+            return HostsFile.ReadAllLines().Any(x => x.Contains("osu.ppy.sh") && !x.Contains("#"));
         }
     }
 }
