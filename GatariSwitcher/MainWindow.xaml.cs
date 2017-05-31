@@ -9,26 +9,42 @@ namespace GatariSwitcher
     {
         bool certStatus = false;
         bool servStatus = false;
+        string gatariAddress = "";
 
         public MainWindow()
         {
             InitializeComponent();
+            gatariAddress = GeneralHelper.GetGatariAddress(); //todo: < THIS SHOULD BE ASYNC
             CheckStatus();
         }
 
-        private async void CheckStatus()
+        private void CheckStatus()
         {
-            string servAddr = await GeneralHelper.GetActualGatariAddress();
-            var manager = new CertificateManager();
-            certStatus = await manager.GetStatus();
-            var switcher = new ServerSwitcher(servAddr);
-            servStatus = switcher.GetCurrentServer();
-
-            statusLabel.Content = servStatus ? "Вы играете на гатарях с кентами!" : "Вы играете на офе с чертями!";
-            switchButton.Content = servStatus ? "Перейти на официальный сервер" : "Перейти на гатари";
-            certButton.Content = certStatus ? "Удалить сертификат" : "Установить сертификат";
+            Task.Run(async () => await CheckServerStatus());
+            Task.Run(async () => await CheckCertStatus());
         }
 
+        private async Task CheckServerStatus()
+        {
+            var switcher = new ServerSwitcher(gatariAddress);
+            servStatus = switcher.GetCurrentServer();
+
+            Dispatcher.Invoke(() =>
+            {
+                statusLabel.Content = servStatus ? "Вы играете на гатарях с кентами!" : "Вы играете на офе с чертями!";
+                switchButton.Content = servStatus ? "Перейти на официальный сервер" : "Перейти на гатари";
+            });
+        }
+
+        private async Task CheckCertStatus()
+        {
+            var manager = new CertificateManager();
+            certStatus = await manager.GetStatus();
+
+            Dispatcher.Invoke(() => certButton.Content = certStatus ? "Удалить сертификат" : "Установить сертификат");
+        }
+
+        //todo: fix this shit
         private void titleBar_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
             base.OnMouseLeftButtonDown(e);
@@ -40,11 +56,10 @@ namespace GatariSwitcher
             Application.Current.Shutdown();
         }
 
-        private async void switchButton_Click(object sender, RoutedEventArgs e)
+        private void switchButton_Click(object sender, RoutedEventArgs e)
         {
             switchButton.IsEnabled = false;
-            string servAddr = await GeneralHelper.GetActualGatariAddress();
-            var switcher = new ServerSwitcher(servAddr);
+            var switcher = new ServerSwitcher(gatariAddress);
             try
             {
                 if (servStatus)
