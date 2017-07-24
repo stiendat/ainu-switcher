@@ -22,7 +22,6 @@ namespace GatariSwitcher
             catch (Exception ex)
             {
                 MessageBox.Show("Не удалось получить адрес сервера:\r\n" + ex.Message);
-                Environment.Exit(0);
             }
             CheckStatus();
         }
