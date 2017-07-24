@@ -7,18 +7,15 @@ namespace GatariSwitcher
 {
     class CertificateManager
     {
-        public async Task<bool> GetStatus()
+        public bool GetStatus()
         {
-            return await Task.Run<bool>(() =>
-            {
-                var store = new X509Store(StoreName.Root, StoreLocation.CurrentUser);
-                store.Open(OpenFlags.ReadOnly);
-                var c = store.Certificates.Find(X509FindType.FindBySubjectName, "*.ppy.sh", true);
-                bool result = (c.Count > 0);
-                store.Close();
+            var store = new X509Store(StoreName.Root, StoreLocation.CurrentUser);
+            store.Open(OpenFlags.ReadOnly);
+            var c = store.Certificates.Find(X509FindType.FindBySubjectName, "*.ppy.sh", true);
+            bool result = (c.Count > 0);
+            store.Close();
 
-                return result;
-            });
+            return result;
         }
 
         public void Install()

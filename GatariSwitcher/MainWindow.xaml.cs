@@ -9,39 +9,52 @@ namespace GatariSwitcher
     {
         bool certStatus = false;
         bool servStatus = false;
-        string gatariAddress = "";
+        string gatariAddress = "173.212.240.174";
 
         public MainWindow()
         {
             InitializeComponent();
-            gatariAddress = GeneralHelper.GetGatariAddress(); //todo: < THIS SHOULD BE ASYNC
+            try
+            {
+                string newAddress = GeneralHelper.GetGatariAddress();
+                gatariAddress = newAddress;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Не удалось получить адрес сервера:\r\n" + ex.Message);
+                Environment.Exit(0);
+            }
             CheckStatus();
         }
 
         private void CheckStatus()
         {
-            Task.Run(async () => await CheckServerStatus());
-            Task.Run(async () => await CheckCertStatus());
+            CheckCertStatus();
+            CheckServerStatus();
         }
 
-        private async Task CheckServerStatus()
+        private void CheckServerStatus()
         {
             var switcher = new ServerSwitcher(gatariAddress);
-            servStatus = switcher.GetCurrentServer();
-
-            Dispatcher.Invoke(() =>
+            servStatus = false;
+            try
             {
-                statusLabel.Content = servStatus ? "Вы играете на гатарях с кентами!" : "Вы играете на офе с чертями!";
-                switchButton.Content = servStatus ? "Перейти на официальный сервер" : "Перейти на гатари";
-            });
+                servStatus = switcher.GetCurrentServer();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Ошибка получения текущего сервера:\r\n" + ex.Message);
+            }
+            statusLabel.Content = servStatus ? "Вы играете на гатарях с кентами!" : "Вы играете на офе с чертями!";
+            switchButton.Content = servStatus ? "Перейти на официальный сервер" : "Перейти на гатари";
         }
 
-        private async Task CheckCertStatus()
+        private void CheckCertStatus()
         {
             var manager = new CertificateManager();
-            certStatus = await manager.GetStatus();
+            certStatus = manager.GetStatus();
 
-            Dispatcher.Invoke(() => certButton.Content = certStatus ? "Удалить сертификат" : "Установить сертификат");
+            certButton.Content = certStatus ? "Удалить сертификат" : "Установить сертификат";
         }
 
         //todo: fix this shit
