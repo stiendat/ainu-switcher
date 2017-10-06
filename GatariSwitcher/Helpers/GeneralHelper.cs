@@ -1,20 +1,23 @@
 ﻿using System.Net;
+using System.Threading.Tasks;
 
 namespace GatariSwitcher
 {
     static class GeneralHelper
     {
-        const string serverAddressUrl = @"https://osu.gatari.pw/api/v1/ip";
-
-        public static string GetGatariAddress()
+        public async static Task<string> GetGatariAddressAsync()
         {
-            using (var client = new WebClient())
+            using (var webClient = new WebClient())
             {
-                string result = client.DownloadString(serverAddressUrl).Trim();
-
-                return result;
+                string result = string.Empty;
+                try
+                {
+                    var line = await webClient.DownloadStringTaskAsync(Constants.GatariIpApiAddress);
+                    result = line;
+                }
+                catch { }
+                return result.Trim();
             }
         }
-
     }
 }

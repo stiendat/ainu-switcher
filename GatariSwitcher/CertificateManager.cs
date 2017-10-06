@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Linq;
 using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks;
 
@@ -7,15 +6,9 @@ namespace GatariSwitcher
 {
     class CertificateManager
     {
-        public bool GetStatus()
+        public Task<bool> GetStatusAsync()
         {
-            var store = new X509Store(StoreName.Root, StoreLocation.CurrentUser);
-            store.Open(OpenFlags.ReadOnly);
-            var c = store.Certificates.Find(X509FindType.FindBySubjectName, "*.ppy.sh", true);
-            bool result = (c.Count > 0);
-            store.Close();
-
-            return result;
+            return Task.Run<bool>(() => GetStatus());
         }
 
         public void Install()
@@ -35,21 +28,36 @@ namespace GatariSwitcher
             store.Open(OpenFlags.ReadWrite);
 
             var certificates = store.Certificates.Find(X509FindType.FindBySubjectName, "*.ppy.sh", true);
-            try
+
+            foreach (var cert in certificates)
             {
-                foreach (var c in certificates)
+                try
                 {
-                    store.Remove(c);
+                    store.Remove(cert);
+                }
+                catch (Exception ex)
+                {
+                    throw ex;
                 }
             }
-            catch (Exception e)
-            {
-                throw e;
-            }
-            finally
+
+            if (store != null)
             {
                 store.Close();
             }
+        }
+
+        public bool GetStatus()
+        {
+            var store = new X509Store(StoreName.Root, StoreLocation.CurrentUser);
+            store.Open(OpenFlags.ReadOnly);
+
+            var c = store.Certificates.Find(X509FindType.FindBySubjectName, "*.ppy.sh", true);
+            bool result = c.Count >= 1;
+
+            store.Close();
+
+            return result;
         }
     }
 }

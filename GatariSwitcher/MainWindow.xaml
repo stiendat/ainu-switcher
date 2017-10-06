@@ -49,12 +49,12 @@
                 </Button>
             </Grid>
 
-            <Label x:Name="statusLabel" Grid.Row="1" Content="Вы играете на офе с чертями!" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"
+            <Label x:Name="statusLabel" Grid.Row="1" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"
                    FontSize="16" Foreground="#FF424242"/>
 
-            <Button x:Name="switchButton" Grid.Row="2" Content="Перейти на гатари" Style="{StaticResource ResourceKey=awesomeButton}" Click="switchButton_Click" />
+            <Button x:Name="switchButton" Grid.Row="2" Style="{StaticResource ResourceKey=awesomeButton}" Click="switchButton_Click" />
 
-            <Button x:Name="certButton" Grid.Row="3" Content="Установить сертификат" Style="{StaticResource ResourceKey=awesomeButton}"
+            <Button x:Name="certButton" Grid.Row="3" Style="{StaticResource ResourceKey=awesomeButton}"
                     ToolTip="Без этой штуки вы не сможете подключиться к серверу на последних версиях игры" Click="sertButton_Click"/>
             
             <TextBlock x:Name="websiteText" Grid.Row="4" Text="osu.gatari.pw" HorizontalAlignment="Right" VerticalAlignment="Center" 

@@ -2,65 +2,64 @@
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
+using System.Windows.Threading;
 
 namespace GatariSwitcher
 {
     public partial class MainWindow : Window
     {
-        bool certStatus = false;
-        bool servStatus = false;
-        string gatariAddress = "163.172.255.98";
+        ServerSwitcher serverSwitcher;
+        CertificateManager certificateManager;
 
         public MainWindow()
         {
+            Dispatcher.UnhandledException += Dispatcher_UnhandledException;
             InitializeComponent();
-            try
-            {
-                string newAddress = GeneralHelper.GetGatariAddress();
-                gatariAddress = newAddress;
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show("Не удалось получить адрес сервера:\r\n" + ex.Message);
-            }
-            CheckStatus();
+            // base init
+            certificateManager = new CertificateManager();
+            switchButton.Content = "Получение IP адреса...";
+            certButton.Content = "Получение статуса сертификата...";
+            statusLabel.Content = Constants.UiUpdatingStatus;
+            DisableSwitching();
+            InitSwitcher();
         }
 
-        private void CheckStatus()
+        private async void InitSwitcher()
         {
-            CheckCertStatus();
-            CheckServerStatus();
-        }
+            // certificate init
+            await CheckSertificate();
 
-        private void CheckServerStatus()
-        {
-            var switcher = new ServerSwitcher(gatariAddress);
-            servStatus = false;
-            try
+            // load server ip
+            var serverIp = await GeneralHelper.GetGatariAddressAsync();
+            if (serverIp == string.Empty)
             {
-                servStatus = switcher.GetCurrentServer();
+                MessageBox.Show("Ошибка при получении IP-адреса гатарей. Возможно, у вас проблемы с Интернетом?" + Environment.NewLine +
+                    "Будет использоваться встроенный IP-адрес. Быть может, он уже устарел.");
+                serverIp = Constants.GatariHardcodedIp;
             }
-            catch (Exception ex)
-            {
-                MessageBox.Show("Ошибка получения текущего сервера:\r\n" + ex.Message);
-            }
-            statusLabel.Content = servStatus ? "Вы играете на гатарях с кентами!" : "Вы играете на офе с чертями!";
-            switchButton.Content = servStatus ? "Перейти на официальный сервер" : "Перейти на гатари";
+            serverSwitcher = new ServerSwitcher(serverIp);
+
+            // switcher init
+            await CheckServer();
         }
 
-        private void CheckCertStatus()
+        private async Task CheckSertificate()
         {
-            var manager = new CertificateManager();
-            certStatus = manager.GetStatus();
-
-            certButton.Content = certStatus ? "Удалить сертификат" : "Установить сертификат";
+            certButton.IsEnabled = false;
+            var certificateStatus = await certificateManager.GetStatusAsync();
+            certButton.Content = certificateStatus ? Constants.UiUninstallCertificate : Constants.UiInstallCertificate;
+            certButton.IsEnabled = true;
         }
 
-        //todo: fix this shit
-        private void titleBar_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        private async Task CheckServer()
         {
-            base.OnMouseLeftButtonDown(e);
-            this.DragMove();
+            switchButton.IsEnabled = false;
+            var currentServer = await serverSwitcher.GetCurrentServerAsync();
+            statusLabel.Content = (currentServer == Server.Gatari)
+                ? Constants.UiYouArePlayingOnGatari : Constants.UiYouArePlayingOnOfficial;
+            switchButton.Content = (currentServer == Server.Official)
+                ? Constants.UiSwitchToGatari : Constants.UiSwitchToOfficial;
+            switchButton.IsEnabled = true;
         }
 
         private void closeButton_Click(object sender, RoutedEventArgs e)
@@ -68,53 +67,76 @@ namespace GatariSwitcher
             Application.Current.Shutdown();
         }
 
-        private void switchButton_Click(object sender, RoutedEventArgs e)
+        private async void switchButton_Click(object sender, RoutedEventArgs e)
         {
-            switchButton.IsEnabled = false;
-            var switcher = new ServerSwitcher(gatariAddress);
+            var serv = await serverSwitcher.GetCurrentServerAsync();
+
             try
             {
-                if (servStatus)
+                if (serv == Server.Official)
                 {
-                    switcher.SwitchToOfficial();
+                    serverSwitcher.SwitchToGatari();
                 }
                 else
                 {
-                    switcher.SwitchToGatari();
+                    serverSwitcher.SwitchToOfficial();
                 }
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message, "Ошибка!", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show("Произошла ошибка при переключении сервера. Если вы уверены, что её не должно быть и у вас отключен антивирус, обратитесь за помощью! Мои контакты можно найти в блоке контактов группы в ВК"
+                + string.Format("\r\n\r\nДетали:\r\n{0}", ex.Message));
+                Logger.Log(ex);
             }
-            CheckStatus();
-            switchButton.IsEnabled = true;
+
+            await CheckServer();
         }
 
-        private void sertButton_Click(object sender, RoutedEventArgs e)
+        private async void sertButton_Click(object sender, RoutedEventArgs e)
         {
-            var manager = new CertificateManager();
+            var status = await certificateManager.GetStatusAsync();
+
             try
             {
-                if (certStatus)
+                if (status)
                 {
-                    manager.Uninstall();
+                    certificateManager.Uninstall();
                 }
                 else
                 {
-                    manager.Install();
+                    certificateManager.Install();
                 }
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message, "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show("Произошла ошибка при установке/удалении сертификата."
+                    + string.Format("\r\n\r\nДетали:\r\n{0}", ex.Message));
+                Logger.Log(ex);
             }
-            CheckStatus();
+
+            await CheckSertificate();
+        }
+
+        private void DisableSwitching()
+        {
+            switchButton.IsEnabled = false;
+            certButton.IsEnabled = false;
         }
 
         private void websiteText_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
             System.Diagnostics.Process.Start("http://osu.gatari.pw");
+        }
+
+        private void titleBar_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            base.OnMouseLeftButtonDown(e);
+            this.DragMove();
+        }
+
+        void Dispatcher_UnhandledException(object sender, DispatcherUnhandledExceptionEventArgs e)
+        {
+            Logger.Fatal(e.Exception);
         }
     }
 }

@@ -1,6 +1,7 @@
 ﻿using System.Linq;
 using GatariSwitcher.Extensions;
 using GatariSwitcher.Helpers;
+using System.Threading.Tasks;
 
 namespace GatariSwitcher
 {
@@ -8,9 +9,9 @@ namespace GatariSwitcher
     {
         private readonly string serverAddress;
 
-        public ServerSwitcher(string servAddress)
+        public ServerSwitcher(string gatariIpAddress)
         {
-            this.serverAddress = servAddress;
+            this.serverAddress = gatariIpAddress;
         }
 
         public void SwitchToGatari()
@@ -33,13 +34,21 @@ namespace GatariSwitcher
             HostsFile.WriteAllLines(HostsFile.ReadAllLines().Where(x => !x.Contains("ppy.sh")));
         }
 
-        /// <summary>
-        /// Get current osu! server
-        /// </summary>
-        /// <returns>true - gatari, false - official</returns>
-        public bool GetCurrentServer()
+        public Task<Server> GetCurrentServerAsync()
         {
-            return HostsFile.ReadAllLines().Any(x => x.Contains("osu.ppy.sh") && !x.Contains("#"));
+            return Task.Run<Server>(() => GetCurrentServer());
         }
+
+        public Server GetCurrentServer()
+        {
+            bool isGatari = HostsFile.ReadAllLines().Any(x => x.Contains("osu.ppy.sh") && !x.Contains("#"));
+            return isGatari ? Server.Gatari : Server.Official;
+        }
+    }
+
+    public enum Server
+    {
+        Official,
+        Gatari
     }
 }
