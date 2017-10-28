@@ -32,8 +32,17 @@ namespace GatariSwitcher.Helpers
         {
             string windir = Environment.GetFolderPath(Environment.SpecialFolder.Windows);
             string result = Path.Combine(windir, "System32", "drivers", "etc", "hosts");
+            CreateFileIfNotExists(result);
 
             return result;
+        }
+
+        private static void CreateFileIfNotExists(string filename)
+        {
+            if (!File.Exists(filename))
+            {
+                File.AppendAllText(filename, "#	127.0.0.1       localhost\r\n");
+            }
         }
 
         private static bool GetReadOnlyFlag(string filepath)
