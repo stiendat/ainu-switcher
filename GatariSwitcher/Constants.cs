@@ -8,18 +8,18 @@
         // The address that can die :D
         public const string GatariIpApiAddress = "http://osu.gatari.pw/api/v1/ip";
 
-        public const string UiInstallCertificate = "Установить сертификат";
+        public const string UiInstallCertificate = "install Certificate";
 
-        public const string UiUninstallCertificate = "Удалить сертификат";
+        public const string UiUninstallCertificate = "Delete Certificate";
 
-        public const string UiYouArePlayingOnGatari = "Вы играете на гатарях с кентами!";
+        public const string UiYouArePlayingOnGatari = "You play on Gatari!";
 
-        public const string UiYouArePlayingOnOfficial = "Вы играете на офе с чертями :(";
+        public const string UiYouArePlayingOnOfficial = "You play on the game with the devils :(";
 
-        public const string UiSwitchToGatari = "Перейти на гатари с кентами";
+        public const string UiSwitchToGatari = "Switch to Gatari";
 
-        public const string UiSwitchToOfficial = "Вернуться на оф с чертями";
+        public const string UiSwitchToOfficial = "Back to hell";
 
-        public const string UiUpdatingStatus = "Получение адресов, ожидайте...";
+        public const string UiUpdatingStatus = "Getting addresses, expect ...";
     }
 }
