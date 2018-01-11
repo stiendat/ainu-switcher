@@ -8,7 +8,7 @@
         // The address that can die :D
         public const string GatariIpApiAddress = "http://osu.gatari.pw/api/v1/ip";
 
-        public const string UiInstallCertificate = "install Certificate";
+        public const string UiInstallCertificate = "Install Certificate";
 
         public const string UiUninstallCertificate = "Delete Certificate";
 
