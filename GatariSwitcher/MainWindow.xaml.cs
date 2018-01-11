@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
@@ -17,8 +17,8 @@ namespace GatariSwitcher
             InitializeComponent();
             // base init
             certificateManager = new CertificateManager();
-            switchButton.Content = "Получение IP адреса...";
-            certButton.Content = "Получение статуса сертификата...";
+            switchButton.Content = "Obtaining an IP address ...";
+            certButton.Content = "Getting the certificate status ...";
             statusLabel.Content = Constants.UiUpdatingStatus;
             DisableSwitching();
             InitSwitcher();
@@ -33,8 +33,8 @@ namespace GatariSwitcher
             var serverIp = await GeneralHelper.GetGatariAddressAsync();
             if (serverIp == string.Empty)
             {
-                MessageBox.Show("Ошибка при получении IP-адреса гатарей. Возможно, у вас проблемы с Интернетом?" + Environment.NewLine +
-                    "Будет использоваться встроенный IP-адрес. Быть может, он уже устарел.");
+                MessageBox.Show("An error occurred while retrieving the IP address of the ghats. Perhaps you have problems with the Internet?" + Environment.NewLine +
+                    "The built-in IP address will be used. Perhaps, it is already obsolete.");
                 serverIp = Constants.GatariHardcodedIp;
             }
             serverSwitcher = new ServerSwitcher(serverIp);
@@ -84,8 +84,8 @@ namespace GatariSwitcher
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Произошла ошибка при переключении сервера. Если вы уверены, что её не должно быть и у вас отключен антивирус, обратитесь за помощью! Мои контакты можно найти в блоке контактов группы в ВК"
-                + string.Format("\r\n\r\nДетали:\r\n{0}", ex.Message));
+                MessageBox.Show("An error occurred while switching the server. If you are sure that it should not be and you have an antivirus turned off, ask for help! My contacts can be found in the contact block of the website"
+                + string.Format("\r\n\r\nDetails:\r\n{0}", ex.Message));
                 Logger.Log(ex);
             }
 
@@ -109,8 +109,8 @@ namespace GatariSwitcher
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Произошла ошибка при установке/удалении сертификата."
-                    + string.Format("\r\n\r\nДетали:\r\n{0}", ex.Message));
+                MessageBox.Show("An error occurred while installing / removing the certificate."
+                    + string.Format("\r\n\r\nDetails:\r\n{0}", ex.Message));
                 Logger.Log(ex);
             }
 
