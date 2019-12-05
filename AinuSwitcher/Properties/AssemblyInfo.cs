@@ -7,12 +7,12 @@ using System.Windows;
 // Управление общими сведениями о сборке осуществляется с помощью 
 // набора атрибутов. Измените значения этих атрибутов, чтобы изменить сведения,
 // связанные со сборкой.
-[assembly: AssemblyTitle("Ainu! Switcher")]
-[assembly: AssemblyDescription("Ainu! the best osu! server")]
+[assembly: AssemblyTitle("ตัวสลับเซิร์ฟเวอร์ Ainu!")]
+[assembly: AssemblyDescription("Ainu! เซิร์ฟเวอร์ osu! ที่ดีที่สุดในโลก (มั้งนะ)")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("Ainu! Switcher")]
-[assembly: AssemblyCopyright("Copyright © Aoba Suzukaze 2019")]
+[assembly: AssemblyProduct("ตัวสลับเซิร์ฟเวอร์ Ainu!")]
+[assembly: AssemblyCopyright("สงวนลิขสิทธิ์ © Aoba Suzukaze 2019")]
 [assembly: AssemblyTrademark("Ainu(TM)")]
 [assembly: AssemblyCulture("")]
 

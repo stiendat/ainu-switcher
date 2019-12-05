@@ -9,18 +9,18 @@ namespace AinuSwitcher
         // Grab address from here when possible
         public const string AinuIpApiAddress = "https://old.ainu.pw/ips.txt";
 
-        public const string UiInstallCertificate = "Install Certificate";
+        public const string UiInstallCertificate = "ติดตั้งใบอนุญาต";
 
-        public const string UiUninstallCertificate = "Delete Certificate";
+        public const string UiUninstallCertificate = "ลบใบอนุญาต";
 
-        public const string UiYouArePlayingOnAinu = "You're connected to Ainu!";
+        public const string UiYouArePlayingOnAinu = "คุณกำลังเชื่อมต่อเซิร์ฟเวอร์ Ainu!";
 
-        public const string UiYouArePlayingOnOfficial = "You're playing on Bancho";
+        public const string UiYouArePlayingOnOfficial = "คุณกำลังเชื่อมต่อเซิร์ฟเวอร์ Bancho";
 
-        public const string UiSwitchToAinu = "Connect to Ainu!";
+        public const string UiSwitchToAinu = "เชื่อมต่อไปเซิร์ฟเวอร์ Ainu!";
 
-        public const string UiSwitchToOfficial = "Disconnect from Ainu!";
+        public const string UiSwitchToOfficial = "ตัดการเชื่อมต่อจากเซิร์ฟเวอร์ Ainu!";
 
-        public const string UiUpdatingStatus = "Retrieving addresses..";
+        public const string UiUpdatingStatus = "กำลังรับที่อยู่เซิร์ฟเวอร์...";
     }
 }

@@ -24,7 +24,7 @@ namespace AinuSwitcher
 
         static void FatalIntenral(object o)
         {
-            var line = string.Format("{0} FATAL!\r\n{1}", DateTime.Now, o);
+            var line = string.Format("{0} เกิดข้อผิดพลาด!\r\n{1}", DateTime.Now, o);
             WriteLineToLog(line);
         }
 

@@ -17,8 +17,8 @@ namespace AinuSwitcher
             InitializeComponent();
             // base init
             certificateManager = new CertificateManager();
-            switchButton.Content = "Retrieving IP address ...";
-            certButton.Content = "Getting the certificate status ...";
+            switchButton.Content = "กำลังรับที่อยู่เซิร์ฟเวอร์...";
+            certButton.Content = "กำลังรับข้อมูลใบอนุญาต...";
             statusLabel.Content = Constants.UiUpdatingStatus;
             DisableSwitching();
             InitSwitcher();
@@ -33,8 +33,8 @@ namespace AinuSwitcher
             var serverIp = await GeneralHelper.GetAinuAddressAsync();
             if (serverIp == string.Empty)
             {
-                MessageBox.Show("An error occurred while retrieving Ainu's IP. Maybe check your Internet connection?" + Environment.NewLine +
-                    "Stored IP address will be used");
+                MessageBox.Show("เกิดข้อผิดพลาดขณะกำลังรับที่อยู่เซิร์ฟเวอร์ กรุณาลองตรวจสอนอืนเตอร์เน็ตของท่าน" + Environment.NewLine +
+                    "ไอพีที่ถูกเก็บไว้ในเครื่องจะถูกใช้งานแทน");
                 serverIp = Constants.AinuHardcodedIp;
             }
             serverSwitcher = new ServerSwitcher(serverIp);
@@ -84,8 +84,8 @@ namespace AinuSwitcher
             }
             catch (Exception ex)
             {
-                MessageBox.Show("An error occurred while connecting to Ainu. If you still can't connect and have tried disabling your antivirus, please ask for help either in our discord!"
-                + string.Format("\r\n\r\nDetails:\r\n{0}", ex.Message));
+                MessageBox.Show("เกิดข้อผิดพลาดขณะเชื่อมต่อไปยังเซิร์ฟเวอร์ Ainu. หากคุณยังเชื่อมต่อไปยังเซิร์ฟเวอร์เราไม่ได้และลองปิดตัวแอนตี้ไวรัสแล้วก็ยังเชื่อไม่ได้อีก, ทางที่ดีติดต่อไปหาเราในดิสคอร์ดดีกว่านะ!"
+                + string.Format("\r\n\r\nเหตุเกิดเนื่องจาก:\r\n{0}", ex.Message));
                 Logger.Log(ex);
             }
 
@@ -109,8 +109,8 @@ namespace AinuSwitcher
             }
             catch (Exception ex)
             {
-                MessageBox.Show("An error occurred while installing / removing the certificate."
-                    + string.Format("\r\n\r\nDetails:\r\n{0}", ex.Message));
+                MessageBox.Show("เกิดข้อผิดพลาดขณะ ติดตั้ง/ถอนการติดตั้ง ใบอนุญาต"
+                    + string.Format("\r\n\r\nเหตุเกิดเนื่องจาก:\r\n{0}", ex.Message));
                 Logger.Log(ex);
             }
 
